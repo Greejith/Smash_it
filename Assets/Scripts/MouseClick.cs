@@ -14,11 +14,14 @@ public class MouseClick : MonoBehaviour
 
     Transform trailTransform;
     Camera thisCamera;
-
+    AudioSource Audio_source;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Audio
+        Audio_source = GetComponent<AudioSource>();
+
         /// <Cursor Effect>
         thisCamera = GetComponent<Camera>();
 
@@ -38,21 +41,26 @@ public class MouseClick : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)|| Input.GetMouseButton(0))
+        if (!GameController.instance.isgameover)
         {
-
-            //Enabling TrailEffect
-            MoveTrailToCursor(Input.mousePosition);
-
-            ///Raycast to detect virus
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-
-            if (hit.collider != null)
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
             {
-                if (hit.collider.gameObject.GetComponent<VirusMovement>()!= null)
+
+                //Enabling TrailEffect
+                MoveTrailToCursor(Input.mousePosition);
+
+                ///Raycast to detect virus
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+                if (hit.collider != null)
                 {
-                    Destroy(hit.collider.gameObject);
+                    if (hit.collider.gameObject.GetComponent<VirusMovement>() != null)
+                    {
+                        Destroy(hit.collider.gameObject);
+                        Audio_source.Play(0);
+
+                    }
                 }
             }
         }

@@ -11,6 +11,9 @@ public class UIManager : MonoBehaviour
     public Image BGEffect;
     public TextMeshProUGUI Timer_Text;
     public float Text_speed;
+    public Image[] lives;
+    public int live = 3;
+    public GameObject gameover;
     private void Awake()
     {
         if (instance == null || instance != this)
@@ -20,7 +23,10 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
-        TimerText();
+        //TimerText();
+        InvokeRepeating("TimerText", 0f, 10f);
+
+
     }
 
     public void ShowBloodEffect()
@@ -36,6 +42,7 @@ public class UIManager : MonoBehaviour
     }
     public void TimerText()
     {
+        Timer_Text.color = Color.black;
         LeanTween.cancel(Timer_Text.gameObject);
         Timer_Text.transform.localScale = Vector3.one;
         LeanTween.scale(Timer_Text.gameObject, Vector3.one * 2, Text_speed).setEasePunch();
@@ -50,5 +57,36 @@ public class UIManager : MonoBehaviour
         {
             Timer_Text.color = Color.red;
         }
+    }
+
+    public void ReduceHealth()
+    {
+        Debug.Log("Live =" + live);
+        switch(live)
+        {
+            case 2:
+                lives[0].enabled = false;
+                lives[1].enabled = true;
+                lives[2].enabled = true;
+                break;
+            case 1:
+                lives[0].enabled = false;
+                lives[1].enabled = false;
+                lives[2].enabled = true;
+                break;
+            case 0:
+                lives[0].enabled = false;
+                lives[1].enabled = false;
+                lives[2].enabled = false;
+                gameover.gameObject.SetActive( true);
+                GameController.instance.isgameover = true;
+                break;
+           
+
+        }
+    }
+    public void Scenechange()
+    {
+        Application.LoadLevel(0);
     }
 }
